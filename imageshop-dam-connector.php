@@ -22,6 +22,29 @@ namespace Imageshop\WordPress;
 \define( 'IMAGESHOP_ABSPATH', __DIR__ );
 \define( 'IMAGESHOP_PLUGIN_BASE_NAME', __FILE__ );
 
+/**
+ * Register a custom autoloader.
+ *
+ * The custom autoloader lets the plugin include files as they are needed, based on the namespace and class name used.
+ * This ensures we only load what is needed at any given time, and that we don't have to manually include files.
+ */
+\spl_autoload_register(
+	function( $class ) {
+		$prefix = __NAMESPACE__ . '\\';
+		$base_dir = __DIR__ . '/includes/';
+		$len = \strlen( $prefix );
+		if ( \strncmp( $prefix, $class, $len ) !== 0 ) {
+			return;
+		}
+		$relative_class = \substr( $class, $len );
+		$file = $base_dir . \str_replace( '\\', '/', $relative_class ) . '.php';
+
+		if ( \file_exists( $file ) ) {
+			require_once $file;
+		}
+	}
+);
+
 // Validate that the plugin is compatible when being activated.
 \register_activation_hook(
 	__FILE__,
