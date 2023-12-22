@@ -22,28 +22,17 @@ namespace Imageshop\WordPress;
 \define( 'IMAGESHOP_ABSPATH', __DIR__ );
 \define( 'IMAGESHOP_PLUGIN_BASE_NAME', __FILE__ );
 
-require_once __DIR__ . '/includes/class-imageshop.php';
-require_once __DIR__ . '/includes/class-attachment.php';
-require_once __DIR__ . '/includes/class-helpers.php';
-require_once __DIR__ . '/includes/class-library.php';
-require_once __DIR__ . '/includes/class-onboarding.php';
-require_once __DIR__ . '/includes/class-rest-controller.php';
-require_once __DIR__ . '/includes/class-search.php';
-require_once __DIR__ . '/includes/class-sync.php';
-
-function imageshop_incompatibile( $msg ) {
-	require_once ABSPATH . DIRECTORY_SEPARATOR . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'plugin.php';
-	\deactivate_plugins( __FILE__ );
-	\wp_die( $msg );
-}
-
 // Validate that the plugin is compatible when being activated.
 \register_activation_hook(
 	__FILE__,
 	function() {
 		if ( \is_admin() && ( ! \defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 			if ( \version_compare( PHP_VERSION, '5.6', '<' ) ) {
-				imageshop_incompatibile(
+				// Ensure the `plugin.php` file is loaded, as it contains the `deactivate_plugins` function.
+				require_once ABSPATH . DIRECTORY_SEPARATOR . 'wp-admin' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'plugin.php';
+				\deactivate_plugins( __FILE__ );
+
+				\wp_die(
 					\sprintf(
 						// translators: %s is the PHP version.
 						__(
