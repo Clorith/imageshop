@@ -2,7 +2,7 @@ import React from 'react';
 
 import Notice from './Notice';
 
-import './onboarding.scss';
+import './onboarding.pcss';
 
 const Onboarding1 = () => {
 	return (

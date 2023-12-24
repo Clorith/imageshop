@@ -6,11 +6,12 @@
 		"@wordpress/scripts": "^26.6.0",
 		"@wordpress/stylelint-config": "^21.18.0",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"tailwindcss": "^3.4.0"
 	},
 	"scripts": {
-		"build": "wp-scripts build src/onboarding.js",
-		"start": "wp-scripts start src/onboarding.js",
+		"build": "wp-scripts build src/onboarding.js src/settings.js",
+		"start": "wp-scripts start src/onboarding.js src/settings.js",
 		"wp-env": "wp-env",
 		"lint-js": "wp-scripts lint-js",
 		"lint-css": "wp-scripts lint-css",
