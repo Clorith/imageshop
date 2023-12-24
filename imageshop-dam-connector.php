@@ -71,10 +71,10 @@ namespace Imageshop\WordPress;
 );
 
 if ( \class_exists( 'WP_CLI' ) ) {
-	require_once __DIR__ . '/includes/CLI/class-meta.php';
-	require_once __DIR__ . '/includes/CLI/class-media.php';
-	require_once __DIR__ . '/includes/CLI/class-duplicates.php';
+	\WP_CLI::add_command( 'imageshop meta', __NAMESPACE__ . '\\CLI\\Meta' );
+	\WP_CLI::add_command( 'imageshop media', __NAMESPACE__ . '\\CLI\\Media' );
+	\WP_CLI::add_command( 'imageshop media duplicates', __NAMESPACE__ . '\\CLI\\Duplicates' );
 }
 
-$isml = Imageshop::get_instance();
+$isml = Plugin::get_instance();
 $isml->start();

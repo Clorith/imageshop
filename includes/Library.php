@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Imageshop\WordPress;
 
+use Imageshop\WordPress\API\Imageshop;
+
 /**
  * Class Library
  */
@@ -17,7 +19,7 @@ class Library {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		if ( Imageshop::get_instance()->onboarding_completed() ) {
+		if ( Plugin::get_instance()->onboarding_completed() ) {
 			\add_filter( 'get_user_option_media_library_mode', array( $this, 'force_grid_view' ) );
 			\add_action( 'admin_init', array( $this, 'override_list_view_mode_url' ) );
 			\add_action( 'admin_head', array( $this, 'hide_list_view_button' ) );
@@ -45,7 +47,7 @@ class Library {
 	 * @return void
 	 */
 	public function add_custom_media_modal_filters() {
-		$imageshop = REST_Controller::get_instance();
+		$imageshop = Imageshop::get_instance();
 
 		\wp_enqueue_script(
 			'imageshop-media-library-filters',
@@ -79,7 +81,7 @@ class Library {
 				'interfaces'        => $imageshop->get_interfaces(),
 				'default_interface' => (int) \get_option( 'imageshop_upload_interface' ),
 				'categories'        => $imageshop->get_categories(),
-				'languages'         => Imageshop::available_locales(),
+				'languages'         => Plugin::available_locales(),
 				'labels'            => array(
 					'origins'    => array(
 						'label'     => esc_html__( 'Media library source origin', 'imageshop-dam-connector' ),

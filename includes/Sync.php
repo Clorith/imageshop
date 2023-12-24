@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Imageshop\WordPress;
 
+use Imageshop\WordPress\API\Imageshop;
+
 /**
  * Class Sync
  */
@@ -173,7 +175,7 @@ class Sync {
 			);
 		}
 
-		$rest = REST_Controller::get_instance();
+		$rest = Imageshop::get_instance();
 
 		// Pagesize set to 0 to get all documents.
 		$attr = array(
@@ -215,7 +217,7 @@ class Sync {
 	 */
 	public function do_import_batch_to_wp( $documents ) {
 		foreach ( $documents as $document ) {
-			$rest = REST_Controller::get_instance();
+			$rest = Imageshop::get_instance();
 			$ret  = $rest->download( $document['DocumentID'] );
 			$this->execute_import_to_wp( $ret->Url, $document ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- `$ret->Url` is defined by the SaaS API.
 		}

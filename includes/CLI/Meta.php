@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Imageshop\WordPress\CLI;
 
+use Imageshop\WordPress\API\Imageshop;
 use Imageshop\WordPress\Attachment;
-use Imageshop\WordPress\REST_Controller;
 
 class Meta {
 
@@ -16,9 +16,7 @@ class Meta {
 
 	private $delay = 5;
 
-	public function __construct() {
-
-	}
+	public function __construct() {}
 
 	/**
 	 * Update the metadata for an attachment.
@@ -195,7 +193,7 @@ class Meta {
 
 	private function validate_file( $post_id ) {
 		$imageshop     = Attachment::get_instance();
-		$imageshop_api = REST_Controller::get_instance();
+		$imageshop_api = Imageshop::get_instance();
 		$imageshop_id  = get_post_meta( $post_id, '_imageshop_document_id', true );
 
 		if ( empty( $imageshop_id ) ) {
@@ -218,5 +216,3 @@ class Meta {
 	}
 
 }
-
-\WP_CLI::add_command( 'imageshop meta', __NAMESPACE__ . '\\Meta' );

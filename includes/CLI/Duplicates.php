@@ -7,8 +7,8 @@ declare(strict_types=1);
 
 namespace Imageshop\WordPress\CLI;
 
+use Imageshop\WordPress\API\Imageshop;
 use Imageshop\WordPress\Attachment;
-use Imageshop\WordPress\REST_Controller;
 
 class Duplicates {
 
@@ -137,7 +137,7 @@ class Duplicates {
 	 */
 	public function delete( $args, $assoc_args ) {
 		global $wpdb;
-		$imageshop = new REST_Controller();
+		$imageshop = new Imageshop();
 		$interface = array( \get_option( 'imageshop_upload_interface' ) );
 
 		if ( isset( $assoc_args['verbose'] ) ) {
@@ -289,5 +289,3 @@ class Duplicates {
 	}
 
 }
-
-\WP_CLI::add_command( 'imageshop media duplicates', __NAMESPACE__ . '\\Duplicates' );

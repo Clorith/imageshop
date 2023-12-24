@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Imageshop\WordPress;
 
+use Imageshop\WordPress\API\Imageshop;
+
 /**
  * Class Attachment
  */
@@ -23,7 +25,7 @@ class Attachment {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		if ( Imageshop::get_instance()->onboarding_completed() ) {
+		if ( Plugin::get_instance()->onboarding_completed() ) {
 			\add_filter( 'wp_get_attachment_image_src', array( $this, 'attachment_image_src' ), 10, 3 );
 			\add_filter( 'wp_get_attachment_url', array( $this, 'attachment_url' ), 10, 2 );
 			\add_action( 'add_attachment', array( $this, 'export_to_imageshop' ), 10, 1 );
@@ -113,7 +115,7 @@ class Attachment {
 	 */
 	public function update_attachment_details_in_imageshop( \WP_REST_Request $request ) {
 		$payload   = array();
-		$imageshop = REST_Controller::get_instance();
+		$imageshop = Imageshop::get_instance();
 
 		foreach ( $request->get_params() as $key => $value ) {
 			switch ( $key ) {
@@ -248,7 +250,7 @@ class Attachment {
 		$imageshop_caption = \get_transient( $transient_id );
 
 		if ( false === $imageshop_caption ) {
-			$imageshop = REST_Controller::get_instance();
+			$imageshop = Imageshop::get_instance();
 
 			$imageshop->set_language( \get_locale() );
 
@@ -610,7 +612,7 @@ class Attachment {
 	public function export_to_imageshop( $post_id, $force = false ) {
 		if ( true === \wp_attachment_is_image( $post_id )
 			&& ( ! \boolval( \get_post_meta( $post_id, '_imageshop_document_id', true ) ) || true === $force ) ) {
-			$rest_controller = REST_Controller::get_instance();
+			$rest_controller = Imageshop::get_instance();
 			try {
 				$file = \get_attached_file( $post_id );
 				if ( \is_readable( $file ) ) {
@@ -881,7 +883,7 @@ class Attachment {
 		if ( ! is_array( $interface ) ) {
 			$interface = (array) $interface;
 		}
-		$rest = REST_Controller::get_instance();
+		$rest = Imageshop::get_instance();
 
 		$url = $rest->get_document_link( $interface[0]->InterfaceName, $original_image->SubDocumentPath ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- `$interface[0]->InterfaceName` and `$original_image->SubDocumentPath` are provided by the SaaS API.
 
@@ -1102,7 +1104,7 @@ class Attachment {
 
 	public function get_document( $document_id ) {
 		if ( ! isset( $this->documents[ $document_id ] ) ) {
-			$imageshop = REST_Controller::get_instance();
+			$imageshop = Imageshop::get_instance();
 
 			$this->documents[ $document_id ] = $imageshop->get_document( $document_id );
 		}
@@ -1255,7 +1257,7 @@ class Attachment {
 	}
 
 	public function preloaded_url( $media, $width, $height ) {
-		$imageshop = REST_Controller::get_instance();
+		$imageshop = Imageshop::get_instance();
 		$media_id  = ( is_object( $media ) ? $media->DocumentID : $media ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- `$media->DocumentID` is defined by the SaaS API.
 
 		$attachment = \get_posts(

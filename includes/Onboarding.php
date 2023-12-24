@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Imageshop\WordPress;
 
+use Imageshop\WordPress\API\Imageshop;
+
 /**
  * Class Onboarding
  */
@@ -17,7 +19,8 @@ class Onboarding {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		if ( ! Imageshop::get_instance()->onboarding_completed() ) {
+		return;
+		if ( ! Plugin::get_instance()->onboarding_completed() ) {
 			\add_action( 'admin_notices', array( $this, 'onboarding_notice' ) );
 			\add_action( 'admin_enqueue_scripts', array( $this, 'onboarding_styles' ) );
 			\add_action( 'rest_api_init', array( $this, 'onboarding_rest_endpoints' ) );
@@ -153,7 +156,7 @@ class Onboarding {
 	public function rest_test_token( \WP_REST_Request $request ) {
 		$token = $request->get_param( 'token' );
 
-		$imageshop = new REST_Controller( $token );
+		$imageshop = new Imageshop( $token );
 
 		if ( $imageshop->test_valid_token() ) {
 			\update_option( 'imageshop_api_key', $token );
@@ -182,7 +185,7 @@ class Onboarding {
 	 * @return \WP_REST_Response
 	 */
 	public function rest_get_interfaces() {
-		$imageshop = REST_Controller::get_instance();
+		$imageshop = Imageshop::get_instance();
 
 		return new \WP_REST_Response(
 			array(

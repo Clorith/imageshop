@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Imageshop\WordPress;
 
+use Imageshop\WordPress\API\Imageshop;
+
 /**
  * Class Search
  */
@@ -20,8 +22,8 @@ class Search {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		if ( Imageshop::get_instance()->onboarding_completed() ) {
-			$this->imageshop  = REST_Controller::get_instance();
+		if ( Plugin::get_instance()->onboarding_completed() ) {
+			$this->imageshop  = Imageshop::get_instance();
 			$this->attachment = Attachment::get_instance();
 
 			\add_action( 'wp_ajax_query-attachments', array( $this, 'search_media' ), 0 );

@@ -5,14 +5,16 @@
 
 declare( strict_types = 1 );
 
-namespace Imageshop\WordPress;
+namespace Imageshop\WordPress\API;
+
+use Imageshop\WordPress\Helpers;
 
 /**
- * Class REST_Controller
+ * Class Imageshop
  */
-class REST_Controller {
+class Imageshop {
 	private const IMAGESHOP_API_BASE_URL               = 'https://api.imageshop.no';
-	private const IMAGESHOP_CDN_PREFIX                 = '	https://v.imgi.no';
+	private const IMAGESHOP_CDN_PREFIX                 = 'https://v.imgi.no';
 	private const IMAGESHOP_API_CAN_UPLOAD             = '/Login/CanUpload';
 	private const IMAGESHOP_API_WHOAMI                 = '/Login/WhoAmI';
 	private const IMAGESHOP_API_CREATE_DOCUMENT        = '/Document/CreateDocument';
@@ -30,7 +32,7 @@ class REST_Controller {
 	private const IMAGESHOP_API_SET_METADATA           = '/Document/SetMetadata';
 
 	/**
-	 * @var REST_Controller
+	 * @var Imageshop
 	 */
 	private static $instance;
 
@@ -98,7 +100,7 @@ class REST_Controller {
 			$language_code = strtolower( $locale );
 		} else {
 			// The fallback is just a basic pattern matcher for manually defined supported languages.
-			$available_locales = Imageshop::available_locales();
+			$available_locales = Helpers::available_locales();
 
 			foreach ( $available_locales as $code => $attributes ) {
 				foreach ( $attributes['iso_codes'] as $iso => $type ) {
@@ -747,9 +749,9 @@ class REST_Controller {
 	 *
 	 * @return self
 	 */
-	public static function get_instance(): REST_Controller {
+	public static function get_instance(): Imageshop {
 		if ( ! self::$instance ) {
-			self::$instance = new REST_Controller();
+			self::$instance = new Imageshop();
 		}
 
 		return self::$instance;
